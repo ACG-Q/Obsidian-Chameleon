@@ -1,0 +1,10 @@
+{
+	"id": "123e4567-e89b-12d3-a456-426614174000",
+	"name": "Chameleon",
+	"author": "六记", 
+	"authorUrl": "https://github.com/ACG-Q", 
+	"description": "Chameleon: A translation plugin for Obsidian that provides multilingual support.",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"isDesktopOnly": true
+}
