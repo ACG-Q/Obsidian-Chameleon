@@ -54,7 +54,7 @@ jobs:
               repo: context.repo.repo,
               release_id: release.data.id,
               name: 'plugin.zip',
-              data: fs.createReadStream(assetPath)
+              data: fs.readFileSync(assetPath)
             });
 
             console.log(`Release created and asset uploaded: ${release.data.html_url}`);
