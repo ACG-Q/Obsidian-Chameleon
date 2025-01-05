@@ -1,10 +1,14 @@
 import {
 	App,
+	Debouncer,
 	FileSystemAdapter,
 	Notice,
 	Plugin,
 	PluginSettingTab,
 	Setting,
+	debounce,
+	getIcon,
+	setIcon
 } from "obsidian";
 import i18n from "utils/i18n";
 import locales from "locales/resources.json";
@@ -52,6 +56,7 @@ export default class MyPlugin extends Plugin {
 	private dictionary: Record<string, string>;
 	private observer: MutationObserver;
 	private statusBarItem: HTMLElement;
+	private updateStatusBarByDebounce: Debouncer<[count: string], void>;
 
 	async onload() {
 		this.fs = this.app.vault.adapter as FileSystemAdapter;
@@ -66,6 +71,8 @@ export default class MyPlugin extends Plugin {
 
 		// 创建状态栏
 		this.statusBarItem = this.addStatusBarItem();
+
+		this.updateStatusBarByDebounce = debounce(this.updateStatusBar, 500)
 
 		// 加载插件设置
 		await this.loadSettings();
@@ -125,7 +132,8 @@ export default class MyPlugin extends Plugin {
 			}
 		});
 
-		this.updateStatusBar();
+		// this.updateStatusBar();
+		this.updateStatusBarByDebounce(this.untranslatedTexts.length.toString())
 	}
 
 	async exportUntranslatedText() {
@@ -181,21 +189,16 @@ export default class MyPlugin extends Plugin {
 		await fs.write(path, JSON.stringify(content, null, 2));
 	}
 
-	updateStatusBar() {
-		try{
-			const createBarItem = (f: DocumentFragment) => {
-				f.createEl("i", { attr: { "data-lucide": "languages" } });
-				f.createEl("span", { text: `${this.untranslatedTextsCount}` });
-			};
-			if(this.settings.recordUntranslated) {
-				// this.statusBarItem.setText(this.i18n.translate("untranslated_strings", "Untranslated strings: {count}", { count: this.untranslatedTextsCount.toString() }));
-				this.statusBarItem.setText(createFragment(createBarItem))
-			}else{
-				this.statusBarItem.empty();
-				this.untranslatedTexts = []
-			}
-		}catch(e){
-			console.error(e);
+	updateStatusBar(count: string) {
+		if(this.settings.recordUntranslated) {
+			this.statusBarItem.setText(createFragment((f)=>{
+				f.append(getIcon("languages") as any)
+				f.createEl("span", { text: count, title: this.i18n.translate("untranslated_strings", "Untranslated strings: {count}", { count })})
+			}))
+			
+		}else{
+			this.statusBarItem.empty();
+			this.untranslatedTexts = []
 		}
 	}
 
@@ -273,7 +276,7 @@ class MyPluginSettingTab extends PluginSettingTab {
 					.setValue(this.plugin.settings.recordUntranslated)
 					.onChange(async (value) => {
 						this.plugin.settings.recordUntranslated = value;
-						this.plugin.updateStatusBar();
+						this.plugin.updateStatusBar("0");
 						await this.plugin.saveSettings();
 					})
 			);

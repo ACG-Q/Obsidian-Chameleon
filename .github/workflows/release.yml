@@ -1,0 +1,52 @@
+name: Release Obsidian plugin
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.x"
+
+      - name: Install GitHub CLI
+        run: |
+          curl -fsSL https://cli.github.com/packages/release/gpg | sudo tee /etc/apt/trusted.gpg.d/github.asc
+          sudo apt-add-repository https://cli.github.com/packages
+          sudo apt update
+          sudo apt install gh
+
+      - name: Build plugin
+        run: |
+          npm install
+          npm run build
+
+      - name: Package build artifacts
+        run: |
+          zip -r plugin.zip dist/
+      
+      - name: Get changelog for release
+        id: changelog
+        run: |
+          changelog=$(head -n 20 CHANGELOG.md) # 获取前20行更新内容
+          echo "changelog=$changelog" >> $GITHUB_ENV
+
+      - name: Create release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          gh release create "$tag" \
+            --title="$tag" \
+            --draft false \
+            --assets plugin.zip \
+            --body "$changelog"
