@@ -25,7 +25,8 @@ jobs:
 
       - name: Package build artifacts
         run: |
-          zip -r plugin.zip dist/*
+          cd dist
+          zip -r plugin.zip .*
 
       - name: Create release
         uses: actions/github-script@v7
@@ -48,7 +49,7 @@ jobs:
             });
 
             // 上传插件资源
-            const assetPath = 'plugin.zip';
+            const assetPath = 'dist/plugin.zip';
             const uploadAsset = await github.rest.repos.uploadReleaseAsset({
               owner: context.repo.owner,
               repo: context.repo.repo,
