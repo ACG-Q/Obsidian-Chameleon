@@ -48,13 +48,17 @@ jobs:
             });
 
             // 上传插件资源
-            const assetPath = 'plugin.zip';
-            const uploadAsset = await github.rest.repos.uploadReleaseAsset({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              release_id: release.data.id,
-              name: 'plugin.zip',
-              data: fs.readFileSync(assetPath)
-            });
+            const assetPaths = ['plugin.zip', 'main.js', 'dictionary.json', 'manifest.json'];
+            for (const assetPath of assetPaths) {
+              const assetName = assetPath
+              await github.rest.repos.uploadReleaseAsset({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.data.id,
+                name: assetName,
+                data: fs.readFileSync(assetPath)
+              });
+            }
+            
 
             console.log(`Release created and asset uploaded: ${release.data.html_url}`);
