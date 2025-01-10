@@ -1,11 +1,10 @@
-// 创建i18n.ts文件，用于配置国际化
-
-
 interface IParams {
     id: string;
     defaultMessage: string;
     values?: Record<string, string>;
 }
+
+export type i18nType = typeof i18n;
 
 class i18n {
     private translation: { [key: string]: { [key: string]: string } };
@@ -30,6 +29,8 @@ class i18n {
         let translationString = defaultValue;
         if (this.translation.hasOwnProperty(lang) && this.translation[lang].hasOwnProperty(key)) {
             translationString = this.translation[lang][key];
+        }else{
+            console.log(`[i18n] 翻译失败：${key}`);
         }
 
         // 替换参数

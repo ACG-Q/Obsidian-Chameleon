@@ -33,5 +33,10 @@
     "updating": "Updating... Please wait...",
     "updated": "Built-in dictionary has been updated",
     "builtin_dictionary_updated": "Built-in dictionary updated",
-    "builtin_dictionary_update_failed": "Failed to update built-in dictionary"
+    "builtin_dictionary_update_failed": "Failed to update built-in dictionary",
+    "debug_development": "Debug",
+    "open_plugin_directory": "Open Plugin Directory",
+    "open_plugin_directory_desc": "Open the plugin directory in the file manager",
+    "open": "Open",
+    "functional_area": "Function"
 }

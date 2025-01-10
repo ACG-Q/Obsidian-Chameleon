@@ -33,5 +33,10 @@
     "updating": "更新中...请稍等...",
     "updated": "已更新内置字典",
     "builtin_dictionary_updated": "内置字典已更新",
-    "builtin_dictionary_update_failed": "内置字典更新失败"
+    "builtin_dictionary_update_failed": "内置字典更新失败",
+    "debug_development": "调试",
+    "open_plugin_directory": "打开插件文件夹",
+    "open_plugin_directory_desc": "在文件管理器中打开插件文件夹",
+    "open": "打开",
+    "functional_area": "功能"
 }

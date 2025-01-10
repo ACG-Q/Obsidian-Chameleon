@@ -25,6 +25,6 @@
     "**/*.ts"
   ],
   "exclude": [
-    "utils/i18n.ts"
+    "src/utils/i18n.ts"
   ]
 }
