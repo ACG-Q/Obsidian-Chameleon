@@ -22,6 +22,10 @@ const DEFAULT_SETTINGS: IPluginSettings = {
 	recordUntranslated: false,
 };
 
+// 翻译文本标记
+const MASK_ATTRIBUTE = "mask_attribute";
+const MASK = "mask";
+
 export default class Chameleon extends Plugin implements IPlugin {
     settings: IPluginSettings;
     fs: FileSystemAdapter;
@@ -98,22 +102,28 @@ export default class Chameleon extends Plugin implements IPlugin {
 
 	// 替换文本
 	private replaceText() {
-		const container = document.querySelector(".vertical-tab-content-container");
+		// 设置界面的右边页面
+		const container = document.querySelector(".vertical-tab-content-container>.vertical-tab-content");
 		if (!container) return;
 
 		// 遍历所有子元素并替换文本
 		container.querySelectorAll("*").forEach(async (element) => {
-			if (element.childElementCount === 0 && element.textContent) {
-				const originalText = element.textContent.trim();
-				const match = this.dictionary[originalText];
-				if (match) {
-					const translationMark = this.settings.translationMark;
-					// 添加翻译标识
-					element.textContent = translationMark.show ? translationMark.mark + match : match;
-				} else {
-					if (!this.settings.recordUntranslated || this.untranslatedTexts.includes(originalText)) return;
-					this.untranslatedTexts.push(originalText);
-				}
+			// 1. 获取元素是否为最后一个子元素
+			// 2. 当前元素是否存在文本
+			// 3. 当前元素是否没有被翻译
+			if(element.childElementCount !== 0 || element.textContent === null || element.textContent.trim().length === 0 || element.getAttribute(MASK_ATTRIBUTE) === MASK) return;
+			
+			const originalText = element.textContent.trim();
+			const match = this.dictionary[originalText];
+			if (match) {
+				const translationMark = this.settings.translationMark;
+				// 添加翻译标识
+				element.textContent = translationMark.show ? translationMark.mark + match : match;
+				// 添加自定义属性，标识为翻译的文本
+				element.setAttribute(MASK_ATTRIBUTE, MASK)
+			} else {
+				if (!this.settings.recordUntranslated || this.untranslatedTexts.includes(originalText)) return;
+				this.untranslatedTexts.push(originalText);
 			}
 		});
 
