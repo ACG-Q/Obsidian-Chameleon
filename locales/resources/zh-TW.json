@@ -26,5 +26,12 @@
     "select_dictionary_file_path": "选择字典文件路径",
     "default_dictionary_path": "指定一个自定义字典文件路径, 默认路径为插件目录下的 dictionary.json",
     "unselected_file": "未选择文件",
-    "custom_dictionary_file": "自定义字典文件"
+    "custom_dictionary_file": "自定义字典文件",
+    "update_builtin_dictionary": "更新內置字典",
+    "update_builtin_dictionary_desc": "是否更新內置字典",
+    "update": "更新",
+    "updating": "更新中... 請稍候...",
+    "updated": "已更新內置字典",
+    "builtin_dictionary_updated": "內置字典已更新",
+    "builtin_dictionary_update_failed": "內置字典更新失敗"
 }

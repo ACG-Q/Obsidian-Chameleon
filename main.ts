@@ -51,12 +51,20 @@ export default class MyPlugin extends Plugin {
 	settings: MyPluginSettings;
 	fs: FileSystemAdapter;
 	language: string;
+	/**
+	 * 该路径为normalizedPath
+	 */
+	defaultDictionaryPath: string;
+	dictionaryPath: string;
+
 	private i18n: i18n;
 	private untranslatedTexts: string[];
 	private dictionary: Record<string, string>;
 	private observer: MutationObserver;
 	private statusBarItem: HTMLElement;
-	private updateStatusBarByDebounce: Debouncer<[count: string], void>;
+	private updateStatusBarByDebounce: Debouncer<[count: string], void>;	
+	updateDictionaryByDebounce: Debouncer<[], void>
+	
 
 	async onload() {
 		this.fs = this.app.vault.adapter as FileSystemAdapter;
@@ -73,6 +81,7 @@ export default class MyPlugin extends Plugin {
 		this.statusBarItem = this.addStatusBarItem();
 
 		this.updateStatusBarByDebounce = debounce(this.updateStatusBar, 500)
+		this.updateDictionaryByDebounce = debounce(this.updateDictionary, 500)
 
 		// 加载插件设置
 		await this.loadSettings();
@@ -81,8 +90,9 @@ export default class MyPlugin extends Plugin {
 		this.addSettingTab(new MyPluginSettingTab(this.app, this));
 
 		// 获取字典内容
-		const dictionaryPath = this.settings.customDictionaryFile || this.manifest.dir + "/dictionary.json";
-		this.dictionary = await this.loadDictionary(dictionaryPath, this.language);
+		this.defaultDictionaryPath = this.manifest.dir + "/dictionary.json";
+		this.dictionaryPath = this.settings.customDictionaryFile || this.defaultDictionaryPath;
+		this.dictionary = await this.loadDictionary(this.dictionaryPath, this.language);
 
 		// console.log("this.dictionary", this.dictionary);
 
@@ -199,6 +209,40 @@ export default class MyPlugin extends Plugin {
 		}else{
 			this.statusBarItem.empty();
 			this.untranslatedTexts = []
+		}
+	}
+
+	/**
+	 * 更新内置字典
+	 * 该函数从指定的URL下载字典数据，并将其写入到文件系统中
+	 * 如果更新成功，将显示成功通知，如果更新失败，将显示错误通知
+	 */
+	async updateDictionary() {
+		// 从 https://github.com/ACG-Q/Obsidian-Chameleon-Dictionary 下载
+		const DICTIONARY_URL = "https://raw.githubusercontent.com/ACG-Q/Obsidian-Chameleon-Dictionary/main/dictionary.json";
+
+		try {
+			// 从 GitHub 下载字典
+			const response = await fetch(DICTIONARY_URL);
+			if (!response.ok) {
+				throw new Error(`HTTP error! status: ${response.status}`);
+			}
+
+			const data = await response.json(); // 直接解析 JSON 数据
+			const jsonString = JSON.stringify(data); // 如果需要保存为字符串格式
+
+			// 写入文件系统
+			await this.fs.write(this.defaultDictionaryPath, jsonString);
+
+			// 内置字典已更新
+			new Notice(this.i18n.translate("builtin_dictionary_updated", "Built-in dictionary updated"));
+
+			// 刷新翻译
+			this.reloadTranslation(this.dictionaryPath)
+		} catch (error) {
+			// 内置字典更新失败
+			new Notice(this.i18n.translate("builtin_dictionary_update_failed", "Failed to update built-in dictionary") + ": " + error.message);
+			console.error("内置字典更新失败:", error);
 		}
 	}
 
@@ -399,5 +443,19 @@ class MyPluginSettingTab extends PluginSettingTab {
 					document.getElementById(fileSelectorId)?.click();
 				});
 			});
+
+		
+		// 更新内置字典
+		new Setting(containerEl)
+			.setName(translate("update_builtin_dictionary", "Update Built-in Dictionary"))
+			.setDesc(translate("update_builtin_dictionary_desc", "Update the built-in dictionary file"))
+			.addButton((btn) => {
+				btn
+				.setButtonText(translate("update", "Update"))
+				.onClick(async () => {
+					new Notice(translate("updating", "Updating... Please wait..."));
+					this.plugin.updateDictionaryByDebounce()
+				})
+			})
 	}
 }

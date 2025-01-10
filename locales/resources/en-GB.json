@@ -26,5 +26,12 @@
     "select_dictionary_file_path": "Select Dictionary File Path",
     "default_dictionary_path": "Specify a custom dictionary file path, the default path is dictionary.json in the plugin directory",
     "unselected_file": "No file selected",
-    "custom_dictionary_file": "Custom Dictionary File"
+    "custom_dictionary_file": "Custom Dictionary File",
+    "update_builtin_dictionary": "Update Built-in Dictionary",
+    "update_builtin_dictionary_desc": "Whether to update the built-in dictionary",
+    "update": "Update",
+    "updating": "Updating... Please wait...",
+    "updated": "Built-in dictionary has been updated",
+    "builtin_dictionary_updated": "Built-in dictionary updated",
+    "builtin_dictionary_update_failed": "Failed to update built-in dictionary"
 }
