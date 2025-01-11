@@ -29,20 +29,20 @@ const displayFunctionalArea = (containerEl: HTMLElement, translate: translateTyp
     reloadTranslationFile: (path:string)=>Promise<void>,
     updateBuiltInDictionary: () => void
 }) => {
-    const { pluginIdentifier: pluginId, getUntranslatedFilePath: getUntranslatedTextPath, getPluginSetting: getSettings, setPluginSetting: setSettings, updateStatus: updateStatusBar, exportUntranslatedContent: exportUntranslatedText, reloadTranslationFile: reloadTranslation, updateBuiltInDictionary: updateDictionary } = opt;
+    const { pluginIdentifier, getUntranslatedFilePath, getPluginSetting, setPluginSetting, updateStatus, exportUntranslatedContent, reloadTranslationFile, updateBuiltInDictionary } = opt;
 
     containerEl.createEl("h3", { text: translate("functional_area", "Functional Area") });
 
-    const recordUntranslated = getSettings("recordUntranslated");
-    const customDictionaryFile = getSettings("customDictionaryFile");
-    const translationMark = getSettings("translationMark")
+    const recordUntranslated = getPluginSetting("recordUntranslated");
+    const customDictionaryFile = getPluginSetting("customDictionaryFile");
+    const translationMark = getPluginSetting("translationMark")
 
     const setCustomDictionaryFile = async (value: string) => {
-        await setSettings("customDictionaryFile", value);
+        await setPluginSetting("customDictionaryFile", value);
     };
 
     const setTranslationMark = async (value: IPluginSettings["translationMark"]) => {
-        await setSettings("translationMark", value);
+        await setPluginSetting("translationMark", value);
     };
 
     // 是否记录未翻译字符串
@@ -53,8 +53,8 @@ const displayFunctionalArea = (containerEl: HTMLElement, translate: translateTyp
             toggle
                 .setValue(recordUntranslated)
                 .onChange(async (value) => {
-                    await setSettings("recordUntranslated", value)
-                    updateStatusBar(0);
+                    await setPluginSetting("recordUntranslated", value)
+                    updateStatus(0);
                 })
         );
 
@@ -65,10 +65,10 @@ const displayFunctionalArea = (containerEl: HTMLElement, translate: translateTyp
             text: createFragment((f) => {
                 f.createEl("span", { text: translate("untranslated_text_will_export_to", "Untranslated text will be exported to ") });
                 f.createEl(
-                    "b", { text: getUntranslatedTextPath(), title: translate("click_to_copy_to_clipboard", "Click to copy to clipboard") },
+                    "b", { text: getUntranslatedFilePath(), title: translate("click_to_copy_to_clipboard", "Click to copy to clipboard") },
                     (el) => {
                         el.onclick = () => {
-                            copyToClipboard(getUntranslatedTextPath(true));
+                            copyToClipboard(getUntranslatedFilePath(true));
                             new Notice(translate("file_path_copied_to_clipboard", "File path copied to clipboard"));
                         };
                         el.style.cursor = "pointer";
@@ -92,7 +92,7 @@ const displayFunctionalArea = (containerEl: HTMLElement, translate: translateTyp
                 .setButtonText(translate("export", "Export"))
                 .onClick(async () => {
                     new Notice(translate("exporting", "Exporting... Please wait..."));
-                    await exportUntranslatedText()
+                    await exportUntranslatedContent()
                     new Notice(translate("exported", "Untranslated text exported"));
                     exportUntranslatedSettings.descEl.empty();
                     exportUntranslatedSettings.setDesc(createFragment(createExportUntranslatedSettingsDescEleByExport));
@@ -125,8 +125,8 @@ const displayFunctionalArea = (containerEl: HTMLElement, translate: translateTyp
 
 
     // 添加自定义字典文件路径设置
-    const fileSelectorId = pluginId + "-file-selector";
-    const fileSelectorInputId = pluginId + "-file-selector-input";
+    const fileSelectorId = pluginIdentifier + "-file-selector";
+    const fileSelectorInputId = pluginIdentifier + "-file-selector-input";
     const fileSelectorOnChange = async (e: Event) => {
         const target = e.target as HTMLInputElement;
         if (!(target && target.files && target.files.length > 0)) return new Notice(translate("unselected_file", "No file selected"));
@@ -141,7 +141,7 @@ const displayFunctionalArea = (containerEl: HTMLElement, translate: translateTyp
         await setCustomDictionaryFile(path)
 
         // 更新字典内容
-        await reloadTranslation(path)
+        await reloadTranslationFile(path)
         new Notice(translate("dictionary_loaded", "Dictionary file loaded: {path}", { path }));
     };
 
@@ -175,7 +175,7 @@ const displayFunctionalArea = (containerEl: HTMLElement, translate: translateTyp
                 .setButtonText(translate("update", "Update"))
                 .onClick(async () => {
                     new Notice(translate("updating", "Updating... Please wait..."));
-                    updateDictionary()
+                    updateBuiltInDictionary()
                 })
         })
 }

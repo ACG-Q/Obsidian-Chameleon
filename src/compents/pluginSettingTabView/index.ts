@@ -72,13 +72,10 @@ class MyPluginSettingTab extends PluginSettingTab {
 		 * @param full 是否返回完整路径，默认为false
 		 * @returns 返回未翻译文本的路径
 		 */
-		const getUntranslatedFilePath = (full: boolean = false) => {
+		const getUntranslatedFilePath = (full?: boolean) => {
 			const pluginDir = getPluginManifest("dir")!;
-
-			const normalizedPath = pluginDir + `/untranslated-to-${this.plugin.language}.txt`;
-			if (full) this.plugin.fs.getFullPath(normalizedPath)
-
-			return normalizedPath
+			const normalizedPath = normalizePath(pluginDir + `/untranslated-to-${this.plugin.language}.txt`);
+			return full ? this.plugin.fs.getFullPath(normalizedPath) : normalizedPath
 		};
 
 		/**

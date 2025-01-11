@@ -102,33 +102,72 @@ export default class Chameleon extends Plugin implements IPlugin {
 
 	// 替换文本
 	private replaceText() {
-		// 设置界面的右边页面
-		const container = document.querySelector(".vertical-tab-content-container>.vertical-tab-content");
-		if (!container) return;
+		const translateElementText = (element:Element) => {
+			// 遍历当前元素的所有子节点
+			Array.from(element.childNodes).forEach((node) => {
+				if (node.nodeType === Node.TEXT_NODE) {
+					// 处理文本节点
+					if (node.textContent === null || node.textContent.trim().length === 0) return; // 跳过空白文本
+					const originalText = node.textContent.trim();
+		
+					const match = this.dictionary[originalText];
+					if (match) {
+						const { show, mark } = this.settings.translationMark;
+						// 翻译并标记文本节点
+						node.textContent = show ? mark + match : match;
+						// 标记父级元素，表示该文本已被翻译
+						element.setAttribute(MASK_ATTRIBUTE, MASK);
+					} else {
+						// 记录未翻译的文本
+						if (
+							this.settings.recordUntranslated &&
+							!this.untranslatedTexts.includes(originalText)
+						) {
+							this.untranslatedTexts.push(originalText);
+						}
+					}
+				} else if (node.nodeType === Node.ELEMENT_NODE) {
+					let el = node as Element
+					// 如果是子元素，递归处理
+					if (
+						!["HR", "BR"].includes(el.tagName) &&
+						!el.getAttribute(MASK_ATTRIBUTE)
+					) {
+						translateElementText.call(this, node);
+					}
+				}
+			});
 
-		// 遍历所有子元素并替换文本
-		container.querySelectorAll("*").forEach(async (element) => {
-			// 1. 获取元素是否为最后一个子元素
-			// 2. 当前元素是否存在文本
-			// 3. 当前元素是否没有被翻译
-			if(element.childElementCount !== 0 || element.textContent === null || element.textContent.trim().length === 0 || element.getAttribute(MASK_ATTRIBUTE) === MASK) return;
+			// 如果当前元素本身需要标记，确保只标记具体的翻译目标
+			// if (
+			// 	element.childElementCount === 0 && // 元素无子元素
+			// 	element.textContent && // 元素有文本
+			// 	element.textContent.trim().length > 0 && // 文本非空
+			// 	!element.getAttribute(MASK_ATTRIBUTE) // 未被标记
+			// ) {
+			// 	element.setAttribute(MASK_ATTRIBUTE, MASK);
+			// }
+
 			
-			const originalText = element.textContent.trim();
-			const match = this.dictionary[originalText];
-			if (match) {
-				const translationMark = this.settings.translationMark;
-				// 添加翻译标识
-				element.textContent = translationMark.show ? translationMark.mark + match : match;
-				// 添加自定义属性，标识为翻译的文本
-				element.setAttribute(MASK_ATTRIBUTE, MASK)
-			} else {
-				if (!this.settings.recordUntranslated || this.untranslatedTexts.includes(originalText)) return;
-				this.untranslatedTexts.push(originalText);
-			}
-		});
+		}
 
-		// this.updateStatusBar();
-		this.updateStatusBarByDebounce(this.untranslatedTexts.length.toString())
+		// 需要捕获的元素
+		const elements_to_capture: string[] = [
+			// 弹窗
+			".modal-content"
+		];
+
+		let untranslatedCount = 0;
+
+		for (const capture of elements_to_capture) {
+			const container = document.querySelector(capture);
+			if (container) {
+				translateElementText(container);
+				untranslatedCount += this.untranslatedTexts.length;
+			}
+		}
+
+		this.updateStatusBarByDebounce(untranslatedCount.toString());
 	}
 
 	async exportUntranslatedText() {

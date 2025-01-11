@@ -49,7 +49,6 @@ const displayDebugDevelopment = (containerEl: HTMLElement, translate: translateT
                 .onClick(openPluginFolder)
         })
     
-  
 
 }
 
