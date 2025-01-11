@@ -7,8 +7,9 @@ import { translateType } from "src/interface";
 
 const displayDebugDevelopment = (containerEl: HTMLElement, translate: translateType, opt: {
     openPluginFolder: () => Promise<void>
+    resetPlugin: () => Promise<void>
 }) => {
-    const { openPluginFolder } = opt
+    const { openPluginFolder, resetPlugin} = opt
     containerEl.createEl("h3", { text: translate("debug_development", "Debug Development") });
 
     // 重启
@@ -25,6 +26,18 @@ const displayDebugDevelopment = (containerEl: HTMLElement, translate: translateT
                 });
         });
 
+    // 打开调试窗口
+    new Setting(containerEl)
+        .setName(translate("overload_plugin", "Reload plugin"))
+        .setDesc(translate("overload_plugin_desc", "Reload the plugin to apply the new language"))
+        .addButton((btn) => {
+            btn
+                .setButtonText(translate("overload", "Reload"))
+                .setClass("mod-cta")
+                .onClick(resetPlugin);
+        });
+
+
     // 打开插件目录
     new Setting(containerEl)
         .setName(translate("open_plugin_directory", "Open Plugin Directory"))
@@ -33,11 +46,11 @@ const displayDebugDevelopment = (containerEl: HTMLElement, translate: translateT
             btn
                 .setClass("mod-cta")
                 .setButtonText(translate("open", "Open"))
-                .onClick(async () => {
-                    // 打开插件目录
-                    await openPluginFolder()
-                })
+                .onClick(openPluginFolder)
         })
+    
+  
+
 }
 
 

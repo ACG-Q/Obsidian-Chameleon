@@ -105,13 +105,23 @@ class MyPluginSettingTab extends PluginSettingTab {
 		 */
 		const updateBuiltInDictionary = () => this.plugin.updateDictionaryByDebounce();
 
-		// 打开插件目录
+		/**
+		 * 打开插件目录
+		 */
 		const openPluginFolder = async () => {
 			(this.app as any).showInFolder(normalizePath(getPluginManifest("dir")! + "/main.js"));
 		};
 
+		const resetPlugin = async () => {
+			const plugins = (this.app as any).plugins
+			await plugins.disablePlugin(this.plugin.manifest.id);
+			await plugins.enablePlugin(this.plugin.manifest.id);
+		}
+
+
 		displayDebugDevelopment(containerEl, translate, {
-			openPluginFolder
+			openPluginFolder,
+			resetPlugin
 		});
 
 		displayFunctionalArea(containerEl, translate, {
