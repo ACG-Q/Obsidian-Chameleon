@@ -41,5 +41,11 @@
     "open_plugin_directory": "開啟插件目錄",
     "open_plugin_directory_desc": "在檔案管理員中開啟插件目錄",
     "open": "開啟",
-    "functional_area": "功能"
+    "functional_area": "功能",
+	"franc_recognition": "【實驗性】語言識別功能",
+	"franc_recognition_desc": "通過 `franc` 插件實現優化未翻譯文本記錄功能，記錄非當前語言的字符串，而不是死板地記錄未翻譯的字符串",
+	"enable_debug": "啟用調試",
+	"enable_debug_desc": "啟用調試模式以在控制台中查看更多信息",
+	"debug_mode_enabled": "調試模式已啟用",
+	"debug_mode_disabled": "調試模式已禁用"
 }

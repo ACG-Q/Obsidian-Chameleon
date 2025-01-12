@@ -36,6 +36,7 @@ const displayFunctionalArea = (containerEl: HTMLElement, translate: translateTyp
     const recordUntranslated = getPluginSetting("recordUntranslated");
     const customDictionaryFile = getPluginSetting("customDictionaryFile");
     const translationMark = getPluginSetting("translationMark")
+	const experimentalFrancRecognition = getPluginSetting("experimentalFrancRecognition")
 
     const setCustomDictionaryFile = async (value: string) => {
         await setPluginSetting("customDictionaryFile", value);
@@ -44,6 +45,10 @@ const displayFunctionalArea = (containerEl: HTMLElement, translate: translateTyp
     const setTranslationMark = async (value: IPluginSettings["translationMark"]) => {
         await setPluginSetting("translationMark", value);
     };
+
+	const setExperimentalFrancRecognition = async (value: IPluginSettings["experimentalFrancRecognition"]) => {
+        await setPluginSetting("experimentalFrancRecognition", value)
+    }
 
     // 是否记录未翻译字符串
     new Setting(containerEl)
@@ -177,7 +182,17 @@ const displayFunctionalArea = (containerEl: HTMLElement, translate: translateTyp
                     new Notice(translate("updating", "Updating... Please wait..."));
                     updateBuiltInDictionary()
                 })
-        })
+        });
+
+	// 【实验性】 通过 Franc 来识别字符串，优化未翻译字符串记录功能
+	new Setting(containerEl)
+		.setName(translate("franc_recognition", "[🔬 Experimental] Language Recognition Feature"))
+		.setDesc(translate("franc_recognition_desc", "Optimizes the recording of untranslated text using the `franc` plugin by logging strings that are not in the current language, rather than rigidly recording untranslated strings."))
+		.addToggle((toggle) =>
+			toggle
+				.setValue(experimentalFrancRecognition)
+				.onChange(setExperimentalFrancRecognition)
+		);
 }
 
 export default displayFunctionalArea;

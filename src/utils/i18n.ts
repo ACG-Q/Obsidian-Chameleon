@@ -7,7 +7,7 @@ interface IParams {
 export type i18nType = typeof i18n;
 
 class i18n {
-    private translation: { [key: string]: { [key: string]: string } };
+    private readonly translation: { [key: string]: { [key: string]: string } };
     private defaultLang: string;
 
     /**
@@ -35,7 +35,7 @@ class i18n {
 
         // 替换参数
         for (const [paramKey, paramValue] of Object.entries(params)) {
-            translationString = translationString.replace(new RegExp(`\{${paramKey}\}`, 'g'), paramValue);
+            translationString = translationString.replace(new RegExp(`{${paramKey}}`, 'g'), paramValue);
         }
 
         return translationString;

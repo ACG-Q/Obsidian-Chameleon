@@ -1,4 +1,4 @@
-import { Debouncer, FileSystemAdapter, Plugin } from "obsidian";
+import { Debouncer, FileSystemAdapter } from "obsidian";
 
 /**
  * 插件设置接口
@@ -25,6 +25,15 @@ export interface IPluginSettings {
      * 是否记录未翻译文本
      */
     recordUntranslated: boolean;
+	/**
+	 * 是否开启实验性语言识别功能
+	 */
+	experimentalFrancRecognition: boolean;
+
+	/**
+	 * 是否启用调试打印
+	 */
+	isDebug: boolean;
 }
 
 export type translateType = (
@@ -64,10 +73,6 @@ export interface IPlugin {
      */
     dictionaryPath: string;
     /**
-     * 未翻译文本计数
-     */
-    untranslatedTextsCount: number;
-    /**
      * 更新状态栏
      * @param count 数量
      * @returns 
@@ -97,5 +102,5 @@ export interface IPlugin {
      * @param lang 指定获取的翻译的语言
      * @returns 
      */
-    translate: translateType
+    translate: translateType;
 }
