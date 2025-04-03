@@ -10,6 +10,9 @@
         "restart_plugin": "Restart Plugin",
         "restart_plugin_desc": "Restart the plugin to apply the new language",
         "restart": "Restart",
+        "overload_plugin": "Reload plugin",
+        "overload_plugin_desc": "Reload the plugin to apply the new language",
+        "overload": "Reload",
         "record_untranslated_strings": "Record Untranslated Strings",
         "record_untranslated_strings_desc": "Whether to record untranslated strings to the list",
         "untranslated_text_will_export_to": "Untranslated text will be exported to ",
@@ -39,7 +42,13 @@
         "open_plugin_directory": "Open Plugin Directory",
         "open_plugin_directory_desc": "Open the plugin directory in the file manager",
         "open": "Open",
-        "functional_area": "Function"
+        "functional_area": "Function",
+        "franc_recognition": "[🔬 Experimental] Language Recognition Feature",
+        "franc_recognition_desc": "Optimizes the recording of untranslated text using the `franc` plugin by logging strings that are not in the current language, rather than rigidly recording untranslated strings.",
+        "enable_debug": "Enable Debug",
+        "enable_debug_desc": "Enable debug mode to see more information in the console",
+        "debug_mode_enabled": "Debug mode enabled",
+        "debug_mode_disabled": "Debug mode disabled"
     },
     "en": {
         "no_corresponding_language": "No corresponding language in the dictionary file: {lang}",
@@ -52,6 +61,9 @@
         "restart_plugin": "Restart Plugin",
         "restart_plugin_desc": "Restart the plugin to apply the new language",
         "restart": "Restart",
+        "overload_plugin": "Reload plugin",
+        "overload_plugin_desc": "Reload the plugin to apply the new language",
+        "overload": "Reload",
         "record_untranslated_strings": "Record Untranslated Strings",
         "record_untranslated_strings_desc": "Whether to record untranslated strings to the list",
         "untranslated_text_will_export_to": "Untranslated text will be exported to ",
@@ -81,7 +93,13 @@
         "open_plugin_directory": "Open Plugin Directory",
         "open_plugin_directory_desc": "Open the plugin directory in the file manager",
         "open": "Open",
-        "functional_area": "Function"
+        "functional_area": "Function",
+        "franc_recognition": "[🔬 Experimental] Language Recognition Feature",
+        "franc_recognition_desc": "Optimizes the recording of untranslated text using the `franc` plugin by logging strings that are not in the current language, rather than rigidly recording untranslated strings.",
+        "enable_debug": "Enable Debug",
+        "enable_debug_desc": "Enable debug mode to see more information in the console",
+        "debug_mode_enabled": "Debug mode enabled",
+        "debug_mode_disabled": "Debug mode disabled"
     },
     "zh-TW": {
         "no_corresponding_language": "字典檔案中沒有對應的語言: {lang}",
@@ -94,6 +112,9 @@
         "restart_plugin": "重新啟動插件",
         "restart_plugin_desc": "重新啟動插件以應用新的語言",
         "restart": "重新啟動",
+        "overload_plugin": "重載插件",
+        "overload_plugin_desc": "重載插件以應用新的語言",
+        "overload": "重載",
         "record_untranslated_strings": "記錄未翻譯字串",
         "record_untranslated_strings_desc": "是否記錄未翻譯的字串到清單",
         "untranslated_text_will_export_to": "未翻譯文字將會導出到 ",
@@ -123,7 +144,13 @@
         "open_plugin_directory": "開啟插件目錄",
         "open_plugin_directory_desc": "在檔案管理員中開啟插件目錄",
         "open": "開啟",
-        "functional_area": "功能"
+        "functional_area": "功能",
+        "franc_recognition": "【實驗性】語言識別功能",
+        "franc_recognition_desc": "通過 `franc` 插件實現優化未翻譯文本記錄功能，記錄非當前語言的字符串，而不是死板地記錄未翻譯的字符串",
+        "enable_debug": "啟用調試",
+        "enable_debug_desc": "啟用調試模式以在控制台中查看更多信息",
+        "debug_mode_enabled": "調試模式已啟用",
+        "debug_mode_disabled": "調試模式已禁用"
     },
     "zh": {
         "no_corresponding_language": "字典文件中没有对应的语言: {lang}",
@@ -136,6 +163,9 @@
         "restart_plugin": "重启插件",
         "restart_plugin_desc": "重启插件以应用新的语言",
         "restart": "重启",
+        "overload_plugin": "重载插件",
+        "overload_plugin_desc": "重载插件以应用新的语言",
+        "overload": "重载",
         "record_untranslated_strings": "记录未翻译字符串",
         "record_untranslated_strings_desc": "是否记录未翻译的字符串到列表",
         "untranslated_text_will_export_to": "未翻译文本将会导出到 ",
@@ -165,6 +195,12 @@
         "open_plugin_directory": "打开插件文件夹",
         "open_plugin_directory_desc": "在文件管理器中打开插件文件夹",
         "open": "打开",
-        "functional_area": "功能"
+        "functional_area": "功能",
+        "franc_recognition": "【🔬实验性】语言识别功能",
+        "franc_recognition_desc": "通过 `franc` 插件实现优化未翻译文本记录功能，记录非当前语言的字符串，而不是死板的记录未翻译的字符串",
+        "enable_debug": "启用调试",
+        "enable_debug_desc": "启用调试模式以在控制台中查看更多信息",
+        "debug_mode_enabled": "调试模式已启用",
+        "debug_mode_disabled": "调试模式已禁用"
     }
 }

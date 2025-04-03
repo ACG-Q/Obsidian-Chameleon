@@ -1,5 +1,5 @@
-import { App, normalizePath, Plugin, PluginManifest, PluginSettingTab, Setting } from "obsidian";
-import { IPlugin, IPluginSettings } from "src/interface";
+import {App, normalizePath, Notice, Plugin, PluginManifest, PluginSettingTab, Setting} from "obsidian";
+import {IPlugin, IPluginSettings} from "src/interface";
 import displayDebugDevelopment from "./displayDebugDevelopment";
 import displayFunctionalArea from "./displayFunctionalArea";
 
@@ -18,7 +18,7 @@ class MyPluginSettingTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		const { containerEl } = this;
+		const {containerEl} = this;
 
 		// 清空设置面板内容
 		containerEl.empty();
@@ -26,8 +26,8 @@ class MyPluginSettingTab extends PluginSettingTab {
 		const translate = this.plugin.translate;
 
 		// 添加插件描述
-		containerEl.createEl("h2", { text: translate("plugin_settings", "Plugin Settings") });
-		containerEl.createEl("p", { text: translate("plugin_settings_desc", "Configure the plugin settings") + "--" + translate("current_language", "Translation identifier: {lang}", { lang: this.plugin.language }) });
+		containerEl.createEl("h2", {text: translate("plugin_settings", "Plugin Settings")});
+		containerEl.createEl("p", {text: translate("plugin_settings_desc", "Configure the plugin settings") + "--" + translate("current_language", "Translation identifier: {lang}", {lang: this.plugin.language})});
 
 		/**
 		 * 获取设置值
@@ -72,18 +72,15 @@ class MyPluginSettingTab extends PluginSettingTab {
 		 * @param full 是否返回完整路径，默认为false
 		 * @returns 返回未翻译文本的路径
 		 */
-		const getUntranslatedFilePath = (full: boolean = false) => {
+		const getUntranslatedFilePath = (full?: boolean) => {
 			const pluginDir = getPluginManifest("dir")!;
-
-			const normalizedPath = pluginDir + `/untranslated-to-${this.plugin.language}.txt`;
-			if (full) this.plugin.fs.getFullPath(normalizedPath)
-
-			return normalizedPath
+			const normalizedPath = normalizePath(pluginDir + `/untranslated-to-${this.plugin.language}.txt`);
+			return full ? this.plugin.fs.getFullPath(normalizedPath) : normalizedPath
 		};
 
 		/**
 		 * 更新状态栏
-		 * @param count 
+		 * @param count
 		 */
 		const updateStatus = (count: number) => {
 			this.plugin.updateStatusBar(count.toString())
@@ -105,13 +102,33 @@ class MyPluginSettingTab extends PluginSettingTab {
 		 */
 		const updateBuiltInDictionary = () => this.plugin.updateDictionaryByDebounce();
 
-		// 打开插件目录
+		/**
+		 * 打开插件目录
+		 */
 		const openPluginFolder = async () => {
 			(this.app as any).showInFolder(normalizePath(getPluginManifest("dir")! + "/main.js"));
 		};
 
+		/**
+		 * 重载插件
+		 */
+		const resetPlugin = async () => {
+			const plugins = (this.app as any).plugins
+			await plugins.disablePlugin(this.plugin.manifest.id);
+			await plugins.enablePlugin(this.plugin.manifest.id);
+		}
+
+		const isDebug = getPluginSetting("isDebug");
+		const toggleDebug = async (toggle: boolean) => {
+			await setPluginSetting("isDebug", toggle);
+			new Notice(toggle ? translate("debug_mode_enabled", "Debug mode enabled") : translate("debug_mode_disabled", "Debug mode disabled"))
+		}
+
 		displayDebugDevelopment(containerEl, translate, {
-			openPluginFolder
+			openPluginFolder,
+			resetPlugin,
+			isDebug,
+			toggleDebug
 		});
 
 		displayFunctionalArea(containerEl, translate, {

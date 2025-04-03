@@ -1,8 +1,8 @@
 import os
 import json
 
-resources_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "./resources"))
-save_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "./resources.json"))
+resources_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "../resources/locales"))
+save_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "./i18n.json"))
 
 print(f"资源路径: {resources_path}")
 print(f"保存路径: {save_path}")

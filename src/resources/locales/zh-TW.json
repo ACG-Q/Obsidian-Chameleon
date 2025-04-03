@@ -9,6 +9,9 @@
     "restart_plugin": "重新啟動插件",
     "restart_plugin_desc": "重新啟動插件以應用新的語言",
     "restart": "重新啟動",
+    "overload_plugin": "重載插件",
+    "overload_plugin_desc": "重載插件以應用新的語言",
+    "overload": "重載",
     "record_untranslated_strings": "記錄未翻譯字串",
     "record_untranslated_strings_desc": "是否記錄未翻譯的字串到清單",
     "untranslated_text_will_export_to": "未翻譯文字將會導出到 ",
@@ -38,5 +41,11 @@
     "open_plugin_directory": "開啟插件目錄",
     "open_plugin_directory_desc": "在檔案管理員中開啟插件目錄",
     "open": "開啟",
-    "functional_area": "功能"
+    "functional_area": "功能",
+	"franc_recognition": "【實驗性】語言識別功能",
+	"franc_recognition_desc": "通過 `franc` 插件實現優化未翻譯文本記錄功能，記錄非當前語言的字符串，而不是死板地記錄未翻譯的字符串",
+	"enable_debug": "啟用調試",
+	"enable_debug_desc": "啟用調試模式以在控制台中查看更多信息",
+	"debug_mode_enabled": "調試模式已啟用",
+	"debug_mode_disabled": "調試模式已禁用"
 }
