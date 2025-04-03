@@ -25,24 +25,26 @@ export interface IPluginSettings {
      * 是否记录未翻译文本
      */
     recordUntranslated: boolean;
-	/**
-	 * 是否开启实验性语言识别功能
-	 */
-	experimentalFrancRecognition: boolean;
 
-	/**
-	 * 是否启用调试打印
-	 */
-	isDebug: boolean;
+    /**
+     * 是否启用调试打印
+     */
+    isDebug: boolean;
 }
 
-export type translateType = (
+/**
+ * 翻译函数类型定义
+ */
+export type TranslateFunction = (
     key: string,
     defaultValue: string,
     params?: Record<string, string>,
     lang?: string
 ) => string
 
+/**
+ * 插件接口定义
+ */
 export interface IPlugin {
     /**
      * 插件设置
@@ -102,5 +104,15 @@ export interface IPlugin {
      * @param lang 指定获取的翻译的语言
      * @returns 
      */
-    translate: translateType;
+    translate: TranslateFunction;
 }
+
+/**
+ * 字典类型定义
+ */
+export type Dictionary = Record<string, string>;
+
+/**
+ * 多语言字典类型定义
+ */
+export type MultiLanguageDictionary = Record<string, Dictionary>;
