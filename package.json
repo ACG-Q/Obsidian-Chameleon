@@ -1,6 +1,6 @@
 {
 	"name": "obsidian-chameleon",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
 	"description": "Chameleon: A translation plugin for Obsidian that provides multilingual support.",
 	"main": "main.js",
 	"scripts": {

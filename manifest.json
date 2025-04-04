@@ -5,6 +5,6 @@
 	"authorUrl": "https://github.com/ACG-Q",
 	"description": "Chameleon: A translation plugin for Obsidian that provides multilingual support.",
 	"minAppVersion": "0.15.0",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"isDesktopOnly": true
 }
