@@ -74,13 +74,15 @@ export function replaceText(
     let untranslatedCount = 0;
 
     // 处理需要捕获的元素
+    const initialUntranslatedCount = untranslatedTexts.length;
     for (const capture of ELEMENTS_TO_CAPTURE) {
-        const container = document.querySelector(capture);
-        if (container) {
+        const containers = document.querySelectorAll(capture);
+        containers.forEach(container => {
             translateElementText(container);
-            untranslatedCount += untranslatedTexts.length;
-        }
+        });
     }
+    // 计算新增的未翻译文本数量
+    untranslatedCount = untranslatedTexts.length - initialUntranslatedCount;
 
     // 更新状态栏
     updateStatusBar(untranslatedCount.toString());

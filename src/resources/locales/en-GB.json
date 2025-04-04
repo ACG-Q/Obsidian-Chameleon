@@ -42,8 +42,6 @@
     "open_plugin_directory_desc": "Open the plugin directory in the file manager",
     "open": "Open",
     "functional_area": "Function",
-	"franc_recognition": "[🔬 Experimental] Language Recognition Feature",
-	"franc_recognition_desc": "Optimizes the recording of untranslated text using the `franc` plugin by logging strings that are not in the current language, rather than rigidly recording untranslated strings.",
 	"enable_debug": "Enable Debug",
 	"enable_debug_desc":  "Enable debug mode to see more information in the console",
 	"debug_mode_enabled": "Debug mode enabled",

@@ -136,8 +136,6 @@ export class TranslationService {
         await this.translator.reloadTranslation(path, fs);
     }
     
-    // 语言检测功能已移除
-    
     /**
      * 清理资源
      */

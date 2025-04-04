@@ -42,8 +42,6 @@
     "open_plugin_directory_desc": "在文件管理器中打开插件文件夹",
     "open": "打开",
     "functional_area": "功能",
-	"franc_recognition": "【🔬实验性】语言识别功能",
-	"franc_recognition_desc": "通过 `franc` 插件实现优化未翻译文本记录功能，记录非当前语言的字符串，而不是死板的记录未翻译的字符串",
 	"enable_debug": "启用调试",
 	"enable_debug_desc": "启用调试模式以在控制台中查看更多信息",
 	"debug_mode_enabled": "调试模式已启用",

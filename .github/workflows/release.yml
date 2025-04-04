@@ -20,12 +20,19 @@ jobs:
 
       - name: Build plugin
         run: |
+          echo "📦 Installing dependencies..."
           npm install
+          echo "🔨 Building plugin..."
           npm run build
+          echo "✅ Build completed successfully!"
 
       - name: Package build artifacts
         run: |
+          echo "📦 Packaging build artifacts..."
           zip plugin.zip main.js dictionary.json manifest.json
+          echo "📊 Artifact details:"
+          ls -la plugin.zip main.js dictionary.json manifest.json
+          echo "✅ Packaging completed successfully!"
 
       - name: Create release
         uses: actions/github-script@v7
@@ -34,8 +41,11 @@ jobs:
             const tag = context.ref.replace('refs/tags/', '');
             const fs = require('fs');
             const changelogPath = 'CHANGELOG.md';
+            console.log(`📝 Reading changelog from ${changelogPath}...`);
             const changelog = fs.readFileSync(changelogPath, 'utf8');
+            console.log(`📋 Changelog content length: ${changelog.length} characters`);
 
+            console.log(`🏷️ Creating GitHub Release for tag: ${tag}`);
             // 创建 GitHub Release
             const release = await github.rest.repos.createRelease({
               owner: context.repo.owner,
@@ -46,11 +56,17 @@ jobs:
               draft: false,
               prerelease: false
             });
+            console.log(`✅ GitHub Release created successfully with ID: ${release.data.id}`);
 
             // 上传插件资源
             const assetPaths = ['plugin.zip', 'main.js', 'dictionary.json', 'manifest.json'];
+            console.log(`📤 Uploading ${assetPaths.length} assets to the release...`);
+            
             for (const assetPath of assetPaths) {
-              const assetName = assetPath
+              const assetName = assetPath;
+              const fileStats = fs.statSync(assetPath);
+              console.log(`📦 Uploading ${assetName} (${(fileStats.size / 1024).toFixed(2)} KB)...`);
+              
               await github.rest.repos.uploadReleaseAsset({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -58,7 +74,13 @@ jobs:
                 name: assetName,
                 data: fs.readFileSync(assetPath)
               });
+              
+              console.log(`✅ Asset ${assetName} uploaded successfully!`);
             }
             
-
-            console.log(`Release created and asset uploaded: ${release.data.html_url}`);
+            console.log(`🎉 Release process completed successfully!`);
+            console.log(`🔗 Release URL: ${release.data.html_url}`);
+            console.log(`📊 Release summary:`);
+            console.log(`   - Tag: ${tag}`);
+            console.log(`   - Assets: ${assetPaths.join(', ')}`);
+            console.log(`   - Created at: ${new Date().toISOString()}`);
