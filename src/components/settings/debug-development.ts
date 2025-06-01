@@ -14,6 +14,8 @@ interface DebugDevelopmentOptions {
     resetPlugin: () => Promise<void>;
     isDebug: boolean;
     toggleDebug: (toggle: boolean) => Promise<void>;
+    exportUntranslatedContent?: () => Promise<void>;
+    updateBuiltInDictionary?: () => void;
 }
 
 /**
@@ -85,6 +87,33 @@ export class DebugDevelopment {
                                 ? translate("debug_mode_enabled", "Debug mode enabled") 
                                 : translate("debug_mode_disabled", "Debug mode disabled")
                         );
+                    });
+            });
+
+        // 导出未翻译文本
+        new Setting(containerEl)
+            .setName(translate("export_untranslated_text", "Export Untranslated Text"))
+            .setDesc(translate("exporting", "Export untranslated strings to a file for dictionary improvement"))
+            .addButton((btn) => {
+                btn
+                    .setButtonText(translate("export", "Export"))
+                    .onClick(async () => {
+                        new Notice(translate("exporting", "Exporting... Please wait..."));
+                        await options.exportUntranslatedContent?.();
+                        new Notice(translate("exported", "Untranslated text exported"));
+                    });
+            });
+
+        // 更新内置字典
+        new Setting(containerEl)
+            .setName(translate("update_builtin_dictionary", "Update Built-in Dictionary"))
+            .setDesc(translate("update_builtin_dictionary_desc", "Update the built-in dictionary file"))
+            .addButton((btn) => {
+                btn
+                    .setButtonText(translate("update", "Update"))
+                    .onClick(async () => {
+                        new Notice(translate("updating", "Updating... Please wait..."));
+                        options.updateBuiltInDictionary?.();
                     });
             });
     }

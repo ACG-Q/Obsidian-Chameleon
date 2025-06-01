@@ -41,25 +41,59 @@ export default class SettingsTab extends PluginSettingTab {
                   translate("current_language", "Translation identifier: {lang}", { lang: this.plugin.language })
         });
 
-        // 显示调试开发区域
-        DebugDevelopment.display(containerEl, translate, {
-            openPluginFolder: this.openPluginFolder.bind(this),
-            resetPlugin: this.resetPlugin.bind(this),
-            isDebug: this.plugin.settings.isDebug,
-            toggleDebug: this.toggleDebug.bind(this)
+        // 创建选项卡容器
+        const tabs = containerEl.createDiv({ cls: "chameleon-tabs" });
+        const tabList = [
+            { id: "functional", label: translate("functional_settings", "Functional Settings") },
+            { id: "debug", label: translate("debug_development", "Debug Development") }
+        ];
+        let activeTab = "functional";
+
+        // 内容区
+        const contentArea = containerEl.createDiv();
+
+        // 渲染Tab内容
+        const renderTabContent = (tabId: string) => {
+            contentArea.empty();
+            if (tabId === "functional") {
+                FunctionalArea.display(contentArea, translate, {
+                    pluginIdentifier: this.plugin.manifest.id,
+                    getUntranslatedFilePath: this.getUntranslatedFilePath.bind(this),
+                    getPluginSetting: this.getPluginSetting.bind(this),
+                    setPluginSetting: this.setPluginSetting.bind(this),
+                    updateStatus: (count: number) => this.plugin.updateStatusBar(count.toString()),
+                    reloadTranslationFile: (path: string) => this.plugin.reloadTranslation(path)
+                });
+            } else if (tabId === "debug") {
+                DebugDevelopment.display(contentArea, translate, {
+                    openPluginFolder: this.openPluginFolder.bind(this),
+                    resetPlugin: this.resetPlugin.bind(this),
+                    isDebug: this.plugin.settings.isDebug,
+                    toggleDebug: this.toggleDebug.bind(this),
+                    exportUntranslatedContent: () => this.plugin.exportUntranslatedText(),
+                    updateBuiltInDictionary: () => this.plugin.updateDictionaryByDebounce()
+                });
+            }
+        };
+
+        // 渲染Tab头
+        tabList.forEach(tab => {
+            const btn = tabs.createEl("button", { text: tab.label, cls: "chameleon-tab" });
+            if (tab.id === activeTab) btn.addClass("active");
+            btn.onclick = () => {
+                if (activeTab === tab.id) return;
+                activeTab = tab.id;
+                // 切换激活样式
+                Array.from(tabs.children).forEach((el, idx) => {
+                    el.classList.toggle("active", tabList[idx].id === activeTab);
+                });
+                // 渲染内容
+                renderTabContent(activeTab);
+            };
         });
 
-        // 显示功能区域
-        FunctionalArea.display(containerEl, translate, {
-            pluginIdentifier: this.plugin.manifest.id,
-            getUntranslatedFilePath: this.getUntranslatedFilePath.bind(this),
-            getPluginSetting: this.getPluginSetting.bind(this),
-            setPluginSetting: this.setPluginSetting.bind(this),
-            updateStatus: (count: number) => this.plugin.updateStatusBar(count.toString()),
-            exportUntranslatedContent: () => this.plugin.exportUntranslatedText(),
-            reloadTranslationFile: (path: string) => this.plugin.reloadTranslation(path),
-            updateBuiltInDictionary: () => this.plugin.updateDictionaryByDebounce()
-        });
+        // 初始渲染
+        renderTabContent(activeTab);
     }
 
     /**

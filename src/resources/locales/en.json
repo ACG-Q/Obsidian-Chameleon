@@ -37,7 +37,7 @@
 	"updated": "Built-in dictionary has been updated",
 	"builtin_dictionary_updated": "Built-in dictionary updated",
 	"builtin_dictionary_update_failed": "Failed to update built-in dictionary",
-	"debug_development": "Debug",
+	"debug_development": "Debug & Development",
 	"open_plugin_directory": "Open Plugin Directory",
 	"open_plugin_directory_desc": "Open the plugin directory in the file manager",
 	"open": "Open",
@@ -45,5 +45,6 @@
 	"enable_debug": "Enable Debug",
 	"enable_debug_desc":  "Enable debug mode to see more information in the console",
 	"debug_mode_enabled": "Debug mode enabled",
-	"debug_mode_disabled": "Debug mode disabled"
+	"debug_mode_disabled": "Debug mode disabled",
+	"functional_settings": "Functional Settings"
 }

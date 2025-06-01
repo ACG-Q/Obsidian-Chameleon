@@ -38,7 +38,7 @@
         "updated": "Built-in dictionary has been updated",
         "builtin_dictionary_updated": "Built-in dictionary updated",
         "builtin_dictionary_update_failed": "Failed to update built-in dictionary",
-        "debug_development": "Debug",
+        "debug_development": "Debug & Development",
         "open_plugin_directory": "Open Plugin Directory",
         "open_plugin_directory_desc": "Open the plugin directory in the file manager",
         "open": "Open",
@@ -46,7 +46,8 @@
         "enable_debug": "Enable Debug",
         "enable_debug_desc": "Enable debug mode to see more information in the console",
         "debug_mode_enabled": "Debug mode enabled",
-        "debug_mode_disabled": "Debug mode disabled"
+        "debug_mode_disabled": "Debug mode disabled",
+        "functional_settings": "Functional Settings"
     },
     "en": {
         "no_corresponding_language": "No corresponding language in the dictionary file: {lang}",
@@ -87,7 +88,7 @@
         "updated": "Built-in dictionary has been updated",
         "builtin_dictionary_updated": "Built-in dictionary updated",
         "builtin_dictionary_update_failed": "Failed to update built-in dictionary",
-        "debug_development": "Debug",
+        "debug_development": "Debug & Development",
         "open_plugin_directory": "Open Plugin Directory",
         "open_plugin_directory_desc": "Open the plugin directory in the file manager",
         "open": "Open",
@@ -95,7 +96,8 @@
         "enable_debug": "Enable Debug",
         "enable_debug_desc": "Enable debug mode to see more information in the console",
         "debug_mode_enabled": "Debug mode enabled",
-        "debug_mode_disabled": "Debug mode disabled"
+        "debug_mode_disabled": "Debug mode disabled",
+        "functional_settings": "Functional Settings"
     },
     "zh-TW": {
         "no_corresponding_language": "字典檔案中沒有對應的語言: {lang}",
@@ -136,7 +138,7 @@
         "updated": "已更新內建字典",
         "builtin_dictionary_updated": "內建字典已更新",
         "builtin_dictionary_update_failed": "內建字典更新失敗",
-        "debug_development": "調試",
+        "debug_development": "調試開發",
         "open_plugin_directory": "開啟插件目錄",
         "open_plugin_directory_desc": "在檔案管理員中開啟插件目錄",
         "open": "開啟",
@@ -144,7 +146,8 @@
         "enable_debug": "啟用調試",
         "enable_debug_desc": "啟用調試模式以在控制台中查看更多信息",
         "debug_mode_enabled": "調試模式已啟用",
-        "debug_mode_disabled": "調試模式已禁用"
+        "debug_mode_disabled": "調試模式已禁用",
+        "functional_settings": "功能設定"
     },
     "zh": {
         "no_corresponding_language": "字典文件中没有对应的语言: {lang}",
@@ -185,7 +188,7 @@
         "updated": "已更新内置字典",
         "builtin_dictionary_updated": "内置字典已更新",
         "builtin_dictionary_update_failed": "内置字典更新失败",
-        "debug_development": "调试",
+        "debug_development": "调试开发",
         "open_plugin_directory": "打开插件文件夹",
         "open_plugin_directory_desc": "在文件管理器中打开插件文件夹",
         "open": "打开",
@@ -193,6 +196,7 @@
         "enable_debug": "启用调试",
         "enable_debug_desc": "启用调试模式以在控制台中查看更多信息",
         "debug_mode_enabled": "调试模式已启用",
-        "debug_mode_disabled": "调试模式已禁用"
+        "debug_mode_disabled": "调试模式已禁用",
+        "functional_settings": "功能设置"
     }
 }

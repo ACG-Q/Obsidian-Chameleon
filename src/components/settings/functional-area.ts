@@ -15,9 +15,9 @@ interface FunctionalAreaOptions {
     getPluginSetting: <T extends keyof IPluginSettings>(key: T) => IPluginSettings[T];
     setPluginSetting: <T extends keyof IPluginSettings>(key: T, value: IPluginSettings[T]) => Promise<void>;
     updateStatus: (count: number) => void;
-    exportUntranslatedContent: () => Promise<void>;
+    exportUntranslatedContent?: () => Promise<void>;
     reloadTranslationFile: (path: string) => Promise<void>;
-    updateBuiltInDictionary: () => void;
+    updateBuiltInDictionary?: () => void;
 }
 
 /**
@@ -88,49 +88,6 @@ export class FunctionalArea {
                     })
             );
 
-        // 创建导出未翻译文本的描述元素（未导出状态）
-        const createExportUntranslatedSettingsDescEleByUnexport = (fragment: DocumentFragment) => { };
-
-        // 创建导出未翻译文本的描述元素（已导出状态）
-        const createExportUntranslatedSettingsDescEleByExport = (fragment: DocumentFragment) => {
-            fragment.createEl("span", {
-                text: createFragment((f) => {
-                    f.createEl("span", { text: translate("untranslated_text_will_export_to", "Untranslated text will be exported to ") });
-                    f.createEl(
-                        "b", { text: getUntranslatedFilePath(), title: translate("click_to_copy_to_clipboard", "Click to copy to clipboard") },
-                        (el) => {
-                            el.onclick = () => {
-                                copyToClipboard(getUntranslatedFilePath(true));
-                                new Notice(translate("file_path_copied_to_clipboard", "File path copied to clipboard"));
-                            };
-                            el.style.cursor = "pointer";
-                            el.style.color = "var(--interactive-accent)";
-                            el.style.textDecoration = "underline";
-                            el.style.margin = "0 5px";
-                            el.style.fontWeight = "bold";
-                        }
-                    );
-                    f.createEl("span", { text: translate("please_check", ", please check!") });
-                }),
-            });
-        };
-
-        // 添加导出未翻译文本的设置
-        const exportUntranslatedSettings = new Setting(containerEl)
-            .setName(translate("export_untranslated_text", "Export Untranslated Text"))
-            .setDesc(createFragment(createExportUntranslatedSettingsDescEleByUnexport))
-            .addButton((btn) => {
-                btn
-                    .setButtonText(translate("export", "Export"))
-                    .onClick(async () => {
-                        new Notice(translate("exporting", "Exporting... Please wait..."));
-                        await exportUntranslatedContent();
-                        new Notice(translate("exported", "Untranslated text exported"));
-                        exportUntranslatedSettings.descEl.empty();
-                        exportUntranslatedSettings.setDesc(createFragment(createExportUntranslatedSettingsDescEleByExport));
-                    });
-            });
-
         // 添加翻译标识的开关
         new Setting(containerEl)
             .setName(translate("add_translation_mark", "Add Translation Mark"))
@@ -197,20 +154,5 @@ export class FunctionalArea {
                     document.getElementById(fileSelectorId)?.click();
                 });
             });
-
-        // 更新内置字典
-        new Setting(containerEl)
-            .setName(translate("update_builtin_dictionary", "Update Built-in Dictionary"))
-            .setDesc(translate("update_builtin_dictionary_desc", "Update the built-in dictionary file"))
-            .addButton((btn) => {
-                btn
-                    .setButtonText(translate("update", "Update"))
-                    .onClick(async () => {
-                        new Notice(translate("updating", "Updating... Please wait..."));
-                        updateBuiltInDictionary();
-                    });
-            });
-
-        // 语言识别功能已移除
     }
 }

@@ -29,9 +29,9 @@ jobs:
       - name: Package build artifacts
         run: |
           echo "📦 Packaging build artifacts..."
-          zip plugin.zip main.js dictionary.json manifest.json
+          zip plugin.zip main.js dictionary.json manifest.json style.css
           echo "📊 Artifact details:"
-          ls -la plugin.zip main.js dictionary.json manifest.json
+          ls -la plugin.zip main.js dictionary.json manifest.json style.css
           echo "✅ Packaging completed successfully!"
 
       - name: Create release
@@ -59,7 +59,7 @@ jobs:
             console.log(`✅ GitHub Release created successfully with ID: ${release.data.id}`);
 
             // 上传插件资源
-            const assetPaths = ['plugin.zip', 'main.js', 'dictionary.json', 'manifest.json'];
+            const assetPaths = ['plugin.zip', 'main.js', 'dictionary.json', 'manifest.json', 'style.css'];
             console.log(`📤 Uploading ${assetPaths.length} assets to the release...`);
             
             for (const assetPath of assetPaths) {
