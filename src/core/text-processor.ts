@@ -6,6 +6,7 @@
 import { Dictionary, IPluginSettings } from "../interfaces";
 import { MASK, MASK_ATTRIBUTE, ELEMENTS_TO_CAPTURE } from "../constants";
 import { ErrorHandler } from "../utils/error-handler";
+import { detectLanguages, getPrimaryLanguage } from "../utils/lang-detect";
 
 /**
  * 替换文本方法
@@ -49,13 +50,20 @@ export function replaceText(
                     // 标记父级元素，表示该文本已被翻译
                     element.setAttribute(MASK_ATTRIBUTE, MASK);
                 } else {
-                    // 记录未翻译的文本
-                    if (
-                        settings.recordUntranslated &&
-                        !untranslatedTexts.includes(originalText)
-                    ) {
-                        debug(`[Chameleon] 找到未翻译的字符串: ${originalText}`);
-                        untranslatedTexts.push(originalText);
+                    // 使用语言检测工具分析文本
+                    const langStats = detectLanguages(originalText, {
+                        minPercentage: 10,    // 只考虑占比超过10%的语言
+                        minChars: 2,          // 至少2个字符
+                        ignoreWhitespace: true // 忽略空白字符
+                    });
+
+                    // 如果文本主要不是目标语言，则记录为未翻译
+                    const primaryLang = getPrimaryLanguage(originalText);
+                    if (primaryLang.language !== language && primaryLang.percentage >= 50) {
+                        if (settings.recordUntranslated && !untranslatedTexts.includes(originalText)) {
+                            debug(`[Chameleon] 找到未翻译的字符串: ${originalText} (检测到主要语言: ${primaryLang.language}, 占比: ${primaryLang.percentage.toFixed(1)}%)`);
+                            untranslatedTexts.push(originalText);
+                        }
                     }
                 }
             } else if (node.nodeType === Node.ELEMENT_NODE) {

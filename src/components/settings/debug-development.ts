@@ -5,6 +5,7 @@
 
 import { Notice, Setting } from "obsidian";
 import { TranslateFunction } from "../../interfaces";
+import { detectLanguage } from "../../utils/lang-detect";
 
 /**
  * 调试开发区域组件接口

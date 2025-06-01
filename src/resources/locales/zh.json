@@ -42,9 +42,9 @@
     "open_plugin_directory_desc": "在文件管理器中打开插件文件夹",
     "open": "打开",
     "functional_area": "功能",
-	"enable_debug": "启用调试",
-	"enable_debug_desc": "启用调试模式以在控制台中查看更多信息",
-	"debug_mode_enabled": "调试模式已启用",
-	"debug_mode_disabled": "调试模式已禁用",
+    "enable_debug": "启用调试",
+    "enable_debug_desc": "启用调试模式以在控制台中查看更多信息",
+    "debug_mode_enabled": "调试模式已启用",
+    "debug_mode_disabled": "调试模式已禁用",
     "functional_settings": "功能设置"
 }

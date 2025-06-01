@@ -6,6 +6,7 @@
 import { Dictionary, IPluginSettings } from "../interfaces";
 import { MASK, MASK_ATTRIBUTE } from "../constants";
 import { ErrorHandler } from "../utils/error-handler";
+import { detectLanguages, getPrimaryLanguage } from "../utils/lang-detect";
 
 /**
  * 缓存结构，用于存储已处理过的文本
@@ -152,7 +153,8 @@ function processTextNodes(
             originalText,
             dictionary,
             settings,
-            untranslatedTexts
+            untranslatedTexts,
+            language
         );
         
         // 更新节点文本
@@ -176,13 +178,15 @@ function processTextNodes(
  * @param dictionary 翻译字典
  * @param settings 插件设置
  * @param untranslatedTexts 未翻译文本数组
+ * @param language 目标语言
  * @returns 翻译后的文本
  */
 function translateText(
     text: string,
     dictionary: Dictionary,
     settings: IPluginSettings,
-    untranslatedTexts: string[]
+    untranslatedTexts: string[],
+    language: string
 ): string {
     // 如果字典中有完全匹配的条目，直接返回
     if (dictionary[text]) {
@@ -191,10 +195,21 @@ function translateText(
             : dictionary[text];
     }
     
-    // 记录未翻译的文本
-    if (settings.recordUntranslated && text.trim().length > 0) {
-        if (!untranslatedTexts.includes(text)) {
-            untranslatedTexts.push(text);
+    // 使用语言检测工具分析文本
+    const langStats = detectLanguages(text, {
+        minPercentage: 10,    // 只考虑占比超过10%的语言
+        minChars: 2,          // 至少2个字符
+        ignoreWhitespace: true // 忽略空白字符
+    });
+
+    // 如果文本主要不是目标语言，则记录为未翻译
+    const primaryLang = getPrimaryLanguage(text);
+    if (primaryLang.language !== language && primaryLang.percentage >= 50) {
+        // 记录未翻译的文本
+        if (settings.recordUntranslated && text.trim().length > 0) {
+            if (!untranslatedTexts.includes(text)) {
+                untranslatedTexts.push(text);
+            }
         }
     }
     
