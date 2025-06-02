@@ -25,6 +25,7 @@
     "**/*.ts"
   ],
   "exclude": [
-    "src/utils/i18n.ts"
+    "node_modules",
+    "dist"
   ]
 }

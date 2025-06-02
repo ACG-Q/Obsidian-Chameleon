@@ -1,4 +1,5 @@
 import { Debouncer, FileSystemAdapter } from "obsidian";
+import { PageRangeType } from "../core/text-processor";
 
 /**
  * 插件设置接口
@@ -30,6 +31,41 @@ export interface IPluginSettings {
      * 是否启用调试打印
      */
     isDebug: boolean;
+
+    /**
+     * 翻译页面配置
+     */
+    translationPages: Array<{
+        /**
+         * 是否启用此页面配置
+         */
+        enabled: boolean;
+        /**
+         * 页面选择器
+         */
+        selector: string;
+        /**
+         * 备注说明
+         */
+        note: string;
+        /**
+         * 页面范围类型
+         */
+        pageRangeType: PageRangeType;
+        /**
+         * 自定义页面范围（当pageRangeType为custom时使用）
+         */
+        customRange?: {
+            /**
+             * 起始页码
+             */
+            start: number;
+            /**
+             * 结束页码
+             */
+            end: number;
+        };
+    }>;
 }
 
 /**

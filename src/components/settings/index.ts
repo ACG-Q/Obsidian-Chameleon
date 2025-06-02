@@ -30,15 +30,21 @@ export default class SettingsTab extends PluginSettingTab {
     display(): void {
         const { containerEl } = this;
         containerEl.empty();
+        containerEl.addClass("chameleon-settings");
 
         const translate = this.plugin.translate;
 
         // 添加插件描述
         containerEl.createEl("h2", { text: translate("plugin_settings", "Plugin Settings") });
-        containerEl.createEl("p", { 
-            text: translate("plugin_settings_desc", "Configure the plugin settings") + 
-                  "--" + 
-                  translate("current_language", "Translation identifier: {lang}", { lang: this.plugin.language })
+        const descRow = containerEl.createDiv({ cls: "chameleon-settings-desc-row" });
+        descRow.createEl("span", { 
+            text: translate("plugin_settings_desc", "Configure the plugin settings"),
+            cls: "chameleon-settings-desc"
+        });
+        descRow.createEl("span", { 
+            text: this.plugin.language,
+            cls: "chameleon-lang-badge",
+            attr: { title: translate("current_language", "Translation identifier: {lang}", { lang: this.plugin.language }) }
         });
 
         // 创建选项卡容器
@@ -50,7 +56,7 @@ export default class SettingsTab extends PluginSettingTab {
         let activeTab = "functional";
 
         // 内容区
-        const contentArea = containerEl.createDiv();
+        const contentArea = containerEl.createDiv({ cls: "chameleon-content" });
 
         // 渲染Tab内容
         const renderTabContent = (tabId: string) => {
@@ -58,10 +64,9 @@ export default class SettingsTab extends PluginSettingTab {
             if (tabId === "functional") {
                 FunctionalArea.display(contentArea, translate, {
                     pluginIdentifier: this.plugin.manifest.id,
-                    getUntranslatedFilePath: this.getUntranslatedFilePath.bind(this),
                     getPluginSetting: this.getPluginSetting.bind(this),
                     setPluginSetting: this.setPluginSetting.bind(this),
-                    updateStatus: (count: number) => this.plugin.updateStatusBar(count.toString()),
+                    updateStatus: (status: string) => this.plugin.updateStatusBar(status),
                     reloadTranslationFile: (path: string) => this.plugin.reloadTranslation(path)
                 });
             } else if (tabId === "debug") {
@@ -70,8 +75,15 @@ export default class SettingsTab extends PluginSettingTab {
                     resetPlugin: this.resetPlugin.bind(this),
                     isDebug: this.plugin.settings.isDebug,
                     toggleDebug: this.toggleDebug.bind(this),
-                    exportUntranslatedContent: () => this.plugin.exportUntranslatedText(),
-                    updateBuiltInDictionary: () => this.plugin.updateDictionaryByDebounce()
+                    exportUntranslatedContent: this.plugin.exportUntranslatedText.bind(this.plugin),
+                    updateBuiltInDictionary: async () => {
+                        await this.plugin.updateDictionaryByDebounce();
+                    },
+                    getPluginSetting: this.plugin.getPluginSetting.bind(this.plugin),
+                    setPluginSetting: this.plugin.setPluginSetting.bind(this.plugin),
+                    updateStatus: this.plugin.updateStatusBar.bind(this.plugin),
+                    getUntranslatedList: this.plugin.getUntranslatedList.bind(this.plugin),
+                    app: this.app
                 });
             }
         };
@@ -94,17 +106,6 @@ export default class SettingsTab extends PluginSettingTab {
 
         // 初始渲染
         renderTabContent(activeTab);
-    }
-
-    /**
-     * 获取未翻译文本的文件路径
-     * @param full 是否返回完整路径
-     * @returns 未翻译文本的文件路径
-     */
-    private getUntranslatedFilePath(full?: boolean): string {
-        const pluginDir = this.plugin.manifest.dir;
-        const normalizedPath = `${pluginDir}/untranslated-to-${this.plugin.language}.txt`;
-        return full ? this.plugin.fs.getFullPath(normalizedPath) : normalizedPath;
     }
 
     /**

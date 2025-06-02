@@ -31,13 +31,31 @@ export default class Chameleon extends Plugin {
     private translationService: TranslationService;
     private settingsService: SettingsService;
     private statusBarItem: HTMLElement;
-    private untranslatedTexts: string[] = [];
     
     // 防抖函数
     updateDictionaryByDebounce: Debouncer<[], void>;
     saveDataByDebounce: Debouncer<[], Promise<void>>;
     private updateStatusBarByDebounce: Debouncer<[count: string], void>;
     
+    /**
+     * 获取插件设置
+     * @param key 设置键
+     * @returns 设置值
+     */
+    getPluginSetting<T extends keyof IPluginSettings>(key: T): IPluginSettings[T] {
+        return this.settings[key];
+    }
+
+    /**
+     * 设置插件设置
+     * @param key 设置键
+     * @param value 设置值
+     */
+    async setPluginSetting<T extends keyof IPluginSettings>(key: T, value: IPluginSettings[T]): Promise<void> {
+        this.settings[key] = value;
+        await this.saveSettings();
+    }
+
     /**
      * 插件加载时的初始化操作
      */
@@ -88,6 +106,9 @@ export default class Chameleon extends Plugin {
         
         // 绑定翻译函数
         this.translate = this.translationService.getTranslateFunction();
+        
+        // 加载样式
+        this.loadStyles();
     }
     
     /**
@@ -119,7 +140,6 @@ export default class Chameleon extends Plugin {
             }));
         } else {
             this.statusBarItem.empty();
-            this.untranslatedTexts = [];
         }
     }
     
@@ -132,16 +152,6 @@ export default class Chameleon extends Plugin {
             this.dictionaryPath,
             this.fs
         );
-    }
-    
-    /**
-     * 导出未翻译文本
-     */
-    async exportUntranslatedText() {
-        this.debug("[Chameleon] 开始导出未翻译文本");
-        await this.translationService.exportUntranslated(this.manifest.dir!, this.fs);
-        this.debug("[Chameleon] 导出未翻译文本完成");
-        new Notice(this.translate("export_success", "未翻译文本导出成功"));
     }
     
     /**
@@ -165,5 +175,25 @@ export default class Chameleon extends Plugin {
      */
     async saveSettings() {
         this.saveDataByDebounce();
+    }
+
+    private loadStyles(): void {
+        this.registerDomEvent(document, "DOMContentLoaded", () => {
+            this.loadStyles();
+        });
+    }
+
+    getUntranslatedList(): string[] {
+        return this.translationService.getUntranslatedList();
+    }
+
+    /**
+     * 导出未翻译文本
+     * @param selectedStrings 选中的未翻译字符串
+     * @param format 导出格式
+     */
+    async exportUntranslatedText(selectedStrings: string[], format: string): Promise<string> {
+        const pluginDir = this.manifest.dir || "";
+        return await this.translationService.exportUntranslated(selectedStrings, format, pluginDir, this.fs);
     }
 }

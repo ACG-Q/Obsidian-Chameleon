@@ -3,18 +3,82 @@
  * 负责文本替换和处理
  */
 
-import { Dictionary, IPluginSettings } from "../interfaces";
-import { MASK, MASK_ATTRIBUTE, ELEMENTS_TO_CAPTURE } from "../constants";
-import { ErrorHandler } from "../utils/error-handler";
+import { MASK, MASK_ATTRIBUTE } from "src/constants";
+import { Dictionary } from "../interfaces";
 import { detectLanguages, getPrimaryLanguage } from "../utils/lang-detect";
 
+// 需要捕获的元素
+const ELEMENTS_TO_CAPTURE = [
+    "div",
+    "span",
+    "p",
+    "h1", "h2", "h3", "h4", "h5", "h6",
+    "a",
+    "button",
+    "label",
+    "li",
+    "td",
+    "th"
+];
+
 /**
- * 替换文本方法
- * 遍历DOM元素，替换文本内容
- * 
- * @param dictionary 字典对象
- * @param settings 插件设置
- * @param language 当前语言
+ * 页面范围类型
+ */
+export enum PageRangeType {
+    /**
+     * 第一页
+     */
+    First = "first",
+    /**
+     * 所有页面
+     */
+    All = "all",
+    /**
+     * 自定义范围
+     */
+    Custom = "custom"
+}
+
+/**
+ * 翻译页面配置
+ */
+interface TranslationPage {
+    /**
+     * 是否启用此页面配置
+     */
+    enabled: boolean;
+    /**
+     * 页面选择器
+     */
+    selector: string;
+    /**
+     * 备注说明
+     */
+    note: string;
+    /**
+     * 页面范围类型
+     */
+    pageRangeType: PageRangeType;
+    /**
+     * 自定义页面范围（当pageRangeType为custom时使用）
+     */
+    customRange?: {
+        /**
+         * 起始页码
+         */
+        start: number;
+        /**
+         * 结束页码
+         */
+        end: number;
+    };
+}
+
+/**
+ * 替换文本
+ * @param dictionary 字典
+ * @param settings 设置
+ * @param language 目标语言
  * @param untranslatedTexts 未翻译文本数组
  * @param updateStatusBar 更新状态栏的回调函数
  * @param debug 调试输出函数
@@ -23,7 +87,8 @@ export function replaceText(
     dictionary: Dictionary,
     settings: {
         translationMark: { show: boolean; mark: string },
-        recordUntranslated: boolean
+        recordUntranslated: boolean,
+        translationPages: TranslationPage[]
     },
     language: string,
     untranslatedTexts: string[],
@@ -31,8 +96,8 @@ export function replaceText(
     debug: (...args: unknown[]) => void
 ): void {
     // 调试输出
-    debug("[Chameleon] 开始替换文本");
-    
+    debug(`[Chameleon] 开始处理文本，目标语言: ${language}`);
+
     // 翻译元素文本的函数
     const translateElementText = (element: Element) => {
         // 遍历当前元素的所有子节点
@@ -66,32 +131,72 @@ export function replaceText(
                         }
                     }
                 }
-            } else if (node.nodeType === Node.ELEMENT_NODE) {
-                const el = node as Element;
-                // 如果是子元素，递归处理
-                if (
-                    !["HR", "BR"].includes(el.tagName) &&
-                    !el.getAttribute(MASK_ATTRIBUTE)
-                ) {
-                    translateElementText(node as Element);
-                }
             }
         });
     };
 
-    let untranslatedCount = 0;
+    // 获取需要处理的根元素
+    const getRootElements = () => {
+        // 获取所有启用的页面配置
+        const enabledPages = settings.translationPages.filter(page => page.enabled);
+        if (enabledPages.length > 0) {
+            // 如果启用了自定义页面配置，使用配置的选择器
+            return enabledPages.flatMap(page => {
+                const elements = Array.from(document.querySelectorAll(page.selector));
+                
+                // 根据页面范围类型过滤元素
+                switch (page.pageRangeType) {
+                    case PageRangeType.First:
+                        return elements.slice(0, 1);
+                    case PageRangeType.All:
+                        return elements;
+                    case PageRangeType.Custom:
+                        if (page.customRange) {
+                            const { start, end } = page.customRange;
+                            return elements.slice(start - 1, end);
+                        }
+                        return elements;
+                    default:
+                        return elements;
+                }
+            });
+        } else {
+            // 否则使用默认的工作区内容
+            return [document.querySelector(".workspace-leaf-content")];
+        }
+    };
 
-    // 处理需要捕获的元素
-    const initialUntranslatedCount = untranslatedTexts.length;
-    for (const capture of ELEMENTS_TO_CAPTURE) {
-        const containers = document.querySelectorAll(capture);
-        containers.forEach(container => {
-            translateElementText(container);
-        });
-    }
-    // 计算新增的未翻译文本数量
-    untranslatedCount = untranslatedTexts.length - initialUntranslatedCount;
+    // 处理元素的函数
+    const processElement = (element: Element) => {
+        // 如果元素已经被翻译过，跳过
+        if (element.hasAttribute(MASK_ATTRIBUTE)) {
+            return;
+        }
+
+        // 检查元素是否应该被排除
+        const isExcluded = settings.translationPages.some(page => 
+            !page.enabled && (element.matches(page.selector) || element.closest(page.selector))
+        );
+        if (isExcluded) {
+            return;
+        }
+
+        // 如果元素是需要捕获的类型，处理其文本
+        if (ELEMENTS_TO_CAPTURE.includes(element.tagName.toLowerCase())) {
+            translateElementText(element);
+        }
+
+        // 递归处理子元素
+        Array.from(element.children).forEach(processElement);
+    };
+
+    // 处理所有根元素
+    getRootElements().forEach(root => {
+        if (root) {
+            processElement(root);
+        }
+    });
 
     // 更新状态栏
-    updateStatusBar(untranslatedCount.toString());
+    updateStatusBar(untranslatedTexts.length.toString());
 }

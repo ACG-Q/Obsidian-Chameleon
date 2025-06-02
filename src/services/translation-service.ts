@@ -7,7 +7,6 @@ import { FileSystemAdapter } from "obsidian";
 import { Translator } from "../core/translator";
 import { IPluginSettings, TranslateFunction } from "../interfaces";
 import { DictionaryService } from "./dictionary-service";
-import { ErrorHandler } from "../utils/error-handler";
 
 /**
  * 翻译服务类
@@ -119,12 +118,23 @@ export class TranslationService {
     
     /**
      * 导出未翻译文本
+     * @param selectedStrings 选中的未翻译字符串
+     * @param format 导出格式
      * @param pluginDir 插件目录
      * @param fs 文件系统适配器
      */
-    async exportUntranslated(pluginDir: string, fs: FileSystemAdapter): Promise<void> {
+    async exportUntranslated(selectedStrings: string[], format: string, pluginDir: string, fs: FileSystemAdapter): Promise<string> {
         const untranslatedTexts = this.translator.getUntranslatedTexts();
-        await this.dictionaryService.exportUntranslated(untranslatedTexts, pluginDir, fs);
+        const exportList = untranslatedTexts.filter(text => selectedStrings.includes(text));
+        let content = "";
+        if (format === "json") {
+            content = JSON.stringify(exportList, null, 2);
+        } else {
+            content = exportList.join("\n");
+        }
+        const filePath = `${pluginDir}/untranslated-to-${this.language}.${format}`;
+        await fs.write(filePath, content);
+        return filePath;
     }
     
     /**
@@ -170,5 +180,13 @@ export class TranslationService {
                 await this.translator.reloadTranslation(path, fs);
             }
         );
+    }
+    
+    /**
+     * 获取未翻译字符串列表
+     * @returns 未翻译字符串详细信息
+     */
+    getUntranslatedList(): string[] {
+        return this.translator.getUntranslatedTexts()
     }
 }

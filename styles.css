@@ -1,0 +1,357 @@
+/* Obsidian-Chameleon 插件设置界面选项卡样式 */
+
+.chameleon-tabs {
+  display: flex;
+  gap: 0.5em;
+  border-bottom: 1px solid var(--background-modifier-border);
+  margin-bottom: 2em;
+  padding-bottom: 0.5em;
+}
+.chameleon-tab {
+  padding: 0.7em 1.5em;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-weight: 500;
+  color: var(--text-muted);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-size: 0.95em;
+}
+.chameleon-tab:hover {
+  background: var(--background-modifier-hover);
+  color: var(--text-normal);
+}
+.chameleon-tab.active {
+  color: var(--interactive-accent);
+  background: var(--background-modifier-hover);
+  font-weight: 600;
+}
+.chameleon-tab-content {
+  display: none;
+  padding: 1em 0;
+}
+.chameleon-tab-content.active {
+  display: block;
+}
+
+/* 翻译页面配置卡片样式 */
+.page-config-card {
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  background: var(--background-secondary-alt, #fcfcfd);
+  border: 1px solid var(--background-modifier-border);
+  margin-bottom: 2em;
+  padding: 0;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+  margin-right: 0.5em;
+}
+.page-config-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.page-config-header {
+  display: flex;
+  align-items: center;
+  padding: 1em 1.5em;
+  border-bottom: 1px solid var(--background-modifier-border);
+  background: var(--background-secondary);
+  min-height: 3.2em;
+}
+.page-config-header .setting-item {
+  margin: 0;
+  padding: 0;
+  background: none;
+  border: none;
+}
+.page-config-header .setting-item-control {
+  margin: 0 0.5em 0 0;
+}
+.page-config-delete {
+  margin: 0 1em 0 0.5em;
+  border-radius: 8px;
+  padding: 0.2em 0.8em;
+  font-size: 0.95em;
+  background: var(--background-modifier-hover);
+  border: none;
+  color: var(--text-error);
+  transition: background 0.2s, color 0.2s;
+}
+.page-config-delete:hover {
+  background: var(--background-modifier-error);
+  color: #fff;
+}
+.page-config-toggle {
+  font-size: 1.3em;
+  cursor: pointer;
+  color: var(--text-faint);
+  transition: color 0.2s;
+  user-select: none;
+}
+.page-config-toggle:hover {
+  color: var(--interactive-accent);
+}
+.page-config-title {
+  font-weight: 600;
+  font-size: 1.1em;
+  color: var(--text-normal);
+  letter-spacing: 0.02em;
+}
+.page-config-body {
+  padding: 1.5em 2em;
+  background: var(--background-primary);
+}
+.page-range-container {
+  margin-top: 0.5em;
+}
+
+/* 设置面板容器 */
+.chameleon-settings {
+    padding: 1.5em;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* 标题样式 */
+.chameleon-settings h2 {
+    font-size: 1.8em;
+    margin-bottom: 0.5em;
+    color: var(--text-normal);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+}
+
+.chameleon-settings p {
+    color: var(--text-muted);
+    margin-bottom: 2em;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+/* 设置项样式 */
+.setting-item {
+    padding: 1em 0;
+    border-bottom: 1px solid var(--background-modifier-border);
+}
+
+.setting-item:last-child {
+    border-bottom: none;
+}
+
+.setting-item-control {
+    margin-top: 0.5em;
+}
+
+/* 开关样式 */
+.toggle-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+/* 输入框样式 */
+input[type="text"] {
+    padding: 0.5em 0.8em;
+    border-radius: 4px;
+    border: 1px solid var(--background-modifier-border);
+    background: var(--background-primary);
+    color: var(--text-normal);
+    transition: border-color 0.2s ease;
+}
+
+input[type="text"]:focus {
+    border-color: var(--interactive-accent);
+    outline: none;
+}
+
+/* 按钮样式 */
+button {
+    padding: 0.5em 1em;
+    border-radius: 4px;
+    border: 1px solid var(--background-modifier-border);
+    background: var(--background-primary);
+    color: var(--text-normal);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+button:hover {
+    background: var(--background-modifier-hover);
+    border-color: var(--interactive-accent);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .chameleon-settings {
+        padding: 1em;
+    }
+    
+    .chameleon-tabs {
+        flex-direction: column;
+        gap: 0.3em;
+    }
+    
+    .chameleon-tab {
+        width: 100%;
+        text-align: left;
+    }
+    
+    .page-config-body {
+        padding: 1em;
+    }
+}
+
+.chameleon-settings-desc-row {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    margin-bottom: 2em;
+}
+
+.chameleon-settings-desc {
+    color: var(--text-muted);
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.chameleon-lang-badge {
+    display: inline-block;
+    background: var(--background-modifier-active-hover, #e0e0e0);
+    color: var(--interactive-accent);
+    font-weight: 600;
+    font-size: 0.92em;
+    border-radius: 8px;
+    padding: 0.2em 0.8em;
+    margin-left: auto;
+    letter-spacing: 0.03em;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+}
+
+/* 导出路径样式 */
+.export-path-container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.export-path {
+    color: var(--interactive-accent);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background-color: var(--background-modifier-hover);
+    font-family: var(--font-monospace);
+    font-size: 0.9em;
+    transition: all 0.2s ease;
+}
+
+.export-path:hover {
+    background-color: var(--background-modifier-active-hover);
+    text-decoration: none;
+}
+
+.untranslated-strings-list {
+  max-height: 320px;
+  overflow-y: auto;
+  margin: 1.5em 0 1em 0;
+  padding: 0.5em;
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 8px;
+  background: var(--background-secondary);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  scrollbar-width: thin;
+  scrollbar-color: var(--interactive-accent) var(--background-secondary);
+}
+
+.untranslated-strings-list::-webkit-scrollbar {
+  width: 8px;
+  background: var(--background-secondary);
+  border-radius: 8px;
+}
+
+.untranslated-strings-list::-webkit-scrollbar-thumb {
+  background: var(--interactive-accent);
+  border-radius: 8px;
+}
+
+.select-all-container {
+  margin-bottom: 1em;
+  text-align: right;
+}
+
+.untranslated-string-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1em;
+  padding: 0.7em 0.5em;
+  border-bottom: 1px solid var(--background-modifier-border);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.untranslated-string-item:last-child {
+  border-bottom: none;
+}
+
+.untranslated-string-item:hover {
+  background: var(--background-modifier-hover);
+}
+
+.untranslated-string-item input[type="checkbox"] {
+  display: none;
+}
+
+.untranslated-string-item.selected {
+  background: var(--background-modifier-active-hover);
+}
+
+.untranslated-string-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8em;
+  width: 100%;
+  cursor: pointer;
+}
+
+.untranslated-string-content {
+  flex: 1;
+}
+
+.untranslated-string-text {
+  font-weight: 500;
+  color: var(--text-normal);
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+/* 按钮容器 */
+.modal-button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1em;
+  margin-top: 1.5em;
+  padding-top: 1em;
+  border-top: 1px solid var(--background-modifier-border);
+}
+
+.untranslated-string-item input[type="checkbox"] + .untranslated-string-content .untranslated-string-text {
+  position: relative; /* 创建定位上下文 */
+  display: inline-block; /* 确保伪元素有容器 */
+}
+
+.untranslated-string-item input[type="checkbox"] + .untranslated-string-content .untranslated-string-text::before {
+  content: "  ";
+  display: inline-block;
+  color: var(--interactive-accent);
+  font-size: 0.95em;
+  margin-right: 0.1em;
+  width: 1.5em;
+  text-align: center;
+}
+
+.untranslated-string-item input[type="checkbox"]:checked + .untranslated-string-content .untranslated-string-text::before {
+  content: "✔ ";
+}

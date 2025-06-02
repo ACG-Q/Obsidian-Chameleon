@@ -3,6 +3,8 @@
  * 集中管理所有常量，消除硬编码字符串和魔法数字
  */
 
+import { PageRangeType } from "./core/text-processor";
+
 // 翻译文本标记相关常量
 export const MASK_ATTRIBUTE = "mask_attribute";
 export const MASK = "mask";
@@ -34,7 +36,20 @@ export const DEFAULT_SETTINGS = {
     /**
      * 是否启用调试打印
      */
-    isDebug: false
+    isDebug: false,
+
+    /**
+     * 翻译页面配置
+     */
+    translationPages: [
+        {
+            enabled: true,
+            selector: ".modal-content",
+            note: "弹窗相关页面",
+            pageRangeType: PageRangeType.All,
+            customRange: undefined
+        },
+    ],
 };
 
 // 字典相关常量
